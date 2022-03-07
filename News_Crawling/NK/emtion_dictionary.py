@@ -8,9 +8,9 @@ class Dic:
                     필요한 csv 파일 불러오기
         '''
 
-        self.words = pd.read_csv("news_data_analysis.csv")
-        self.news_data = pd.read_csv("news_crawling.csv")
-        self.price = pd.read_csv("price_crawling.csv")
+        self.words = pd.read_csv('C:/Users/82102/OneDrive/문서/Nakyung-Emotion-Recognization/News_Crawling/NK/news_data_analysis.csv')
+        self.news_data = pd.read_csv('C:/Users/82102/OneDrive/문서/Nakyung-Emotion-Recognization/News_Crawling/NK/news_crawling.csv')
+        self.label = pd.read_csv('C:/Users/82102/OneDrive/문서/Nakyung-Emotion-Recognization/News_Crawling/NK/[대한항공]label.csv')
 
     def include(self,i,j):
         '''
@@ -30,25 +30,14 @@ class Dic:
         '''
 
         nsp=[]
-        i=len(self.price)-1
 
-        date=self.news_data['date'][j][:11]
-        mo=date[6:8]
-        day=date[9:11]
+        date=self.news_data['date'][j][1:11]
 
-        time1=datetime(2021,int(mo),int(day))
-        time2=datetime(2021,int(self.price['date'][i][5:7]),int(self.price['date'][i][8:10]))
-        
-        while True:
-            time2=datetime(2021,int(self.price['date'][i][5:7]),int(self.price['date'][i][8:10]))
-            if (time1-time2).days > 0:
-                i-=1
-            else:
-                break
+        i = self.label[self.label['date'] == str(date)].index[0]
 
         try:
             #주가 상승 여부 (익일 주가)
-            if self.price['diff'][i-1]>0:
+            if self.label['label'][i]==1:
                 nsp=1
             else:
                 nsp=0
@@ -56,7 +45,7 @@ class Dic:
             nsp=0
 
         return nsp
-
+        
     def dic(self):
         '''
             dic() : 긍정지수 딕셔너리 생성 함수
@@ -88,7 +77,7 @@ class Dic:
         df=df[["word","positive_index"]]
         print(df)
         dataframe = pd.DataFrame(df)
-        dataframe.to_csv("emotion_dictionary.csv",header=True,index=False)
+        dataframe.to_csv("C:/Users/82102/OneDrive/문서/Nakyung-Emotion-Recognization/News_Crawling/NK/emotion_dictionary.csv",header=True,index=False)
 
 
 if __name__ == "__main__":
